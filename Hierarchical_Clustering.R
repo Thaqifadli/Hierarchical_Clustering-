@@ -15,19 +15,18 @@ mtcars
 # Use only numeric variables
 mtcars_num <- mtcars[, c("fuel_efficiency", "horsepower")]
 
-# Standardize (important because units differ)
-mtcars_scaled <- scale(mtcars_num)
 
-dist_matrix <- dist(mtcars_scaled, method = "euclidean")
+#Find distance
+dist_matrix <- dist(mtcars_num)
 dist_matrix
 
 #Perform Hierarchical clustering
-hcl <- hclust(dist_matrix, method = "complete")
+hcl <- hclust(dist_matrix, method = "single")
 
 #Plot dendogram
 plot(hcl,
      labels = mtcars$car_model,
-     main = "Hierarchical Clustering (Complete Linkage)",
+     main = "Hierarchical Clustering (Single Linkage)",
      xlab = "",
      sub = "",
      cex = 0.9)
@@ -38,7 +37,7 @@ mtcars$cluster <- as.factor(clusters)
 mtcars
 
 #Create a heatmap
-heatmap(as.matrix(mtcars_scaled),
+heatmap(as.matrix(mtcars_num),
         Rowv = as.dendrogram(hcl),
         Colv = NA,
         scale = "none",
@@ -50,7 +49,7 @@ heatmap(as.matrix(mtcars_scaled),
 
 #Plot cluster
 fviz_cluster(
-  list(data = mtcars_scaled, cluster = clusters),
+  list(data = mtcars_num, cluster = clusters),
   geom = "point",
   ellipse.type = "convex",
   palette = "jco",
